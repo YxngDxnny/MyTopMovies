@@ -1,0 +1,43 @@
+﻿@using MyTopMovies.Models;
+@using MyTopMovies.Controllers;
+@model MoviesController.MovieSearchModel;
+@{
+    ViewData["Title"] = "Search for a Movie";
+}
+
+<add namespace="System.Web.Mvc.Html" />
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class=" col-6">
+            <h2 class=" text-primary">
+                Search for a Movie to add;
+            </h2>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<form asp-controller="Movies" asp-action="SearchPost" method="get">
+    <p>
+        Title: <input type="text" name="searchString" value="@Model.AddTo.SearchString" />
+        <input type="hidden" name="selectionID" value="@Model.AddTo.SelectionID" />
+        <input type="hidden" name="rank" value="@Model.AddTo.Rank" />
+        <input type="hidden" name="returnPoint" value="@Model.MovieEnum.ReturnPoint" />
+        <input type="hidden" name="page" value="@Model.MovieEnum.Page" />
+        <input type="submit" value="Search" />
+    </p>
+</form>
+<div class=" col-6">
+
+    <a asp-controller="Favourites" asp-action="Movies" asp-route-page="1" asp-route-selectionID=@Model.AddTo.SelectionID asp-route-rank=@Model.AddTo.Rank>
+        <h4 class=" text-primary">
+            Select from Favourites
+        </h4>
+        </a> 
+    
+</div>
+<!--Render Enumeration of movie search results-->
+@{
+    Html.RenderPartialAsync("_SearchMovie", Model.MovieEnum);
+}
+

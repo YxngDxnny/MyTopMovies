@@ -1,0 +1,127 @@
+﻿@using MyTopMovies.Controllers;
+@model ListsController.OverallRankingModel
+@{
+    ViewData["Title"] = "Overall Rankings";
+}
+
+<add namespace="System.Web.Mvc.Html" />
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class=" col-6">
+            <h2 class=" text-primary">
+                Overall Rankings for @Model.List.ListName
+            </h2>
+            @if(Model.SelectionCount>0)
+            {
+                <p>
+                    @Model.SelectionCount User(s) made selection(s) for this list.
+                </p>
+                <a asp-controller="UserProfile" asp-action="ListSelections" asp-route-listID=@Model.List.ListID class="btn btn-primary">
+                    <p>
+                        View All>>
+                    </p>
+                </a>
+                
+            }
+            else
+            {
+                <p>
+                    No Selections made for this list.
+                </p>
+            }
+        </div>
+        
+    </div>
+</div>
+<br />
+<div class="text-end ">
+    @if(Model.HasSelection)
+    {
+        <a asp-controller="Selection" asp-action="Index" asp-route-listID="@Model.List.ListID" class="btn btn-primary">
+    <i class="bi bi-pencil-square"></i> Edit Your Selection
+        </a>
+    }
+    else
+    {
+        <a asp-controller="Selection" asp-action="New" asp-route-listID="@Model.List.ListID" class="btn btn-secondary">
+    <i class="bi bi-plus-circle"></i>Create Your Selection
+        </a>
+    }
+        
+</div>
+<br />
+
+<!--Render Enumeration of movie lists-->
+@{
+    Html.RenderPartialAsync("_OverallRanking", Model.RankingEnum);
+}
+
+<!--Page Navigation-->
+@if (Model.RankingEnum.Models.Count() > Display.FullItemCount)
+{
+    <div class="row w-100 px-5 gap-2">
+        <div class="col-2 d-flex aligns-items-center mx-3">
+            <div class="h-50 align-self-center">
+                @{
+                    int totalpages = (int)(Model.RankingEnum.Models.Count() / Display.FullItemCount);
+                }
+                <p>
+                    Page @Model.RankingEnum.Page of @totalpages
+                </p>
+            </div>
+        </div>
+
+        <div class="col-2  mx-3">
+            <div class="row btn-group-sm justify-content-evenly w-100" role="group">
+                @if (Model.RankingEnum.Page > 1)
+                {
+                    int goTo = Model.RankingEnum.Page - 1;
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary">
+                            <a asp-controller="Lists" asp-action="OverallRanking" asp-route-listID=@Model.List.ListID asp-route-page=@goTo>
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </button>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary" disabled>
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                    </div>
+
+                }
+                <div class="col-1 d-flex aligns-items-center justify-content-evenly">
+                    <div class="h-50 align-self-center">
+                        @Model.RankingEnum.Page
+                    </div>
+                </div>
+                @if ((Model.RankingEnum.Models.Count() > Display.FullItemCount)
+               && (Model.RankingEnum.Models.Count() > (Model.RankingEnum.Page * Display.FullItemCount)))
+                {
+                    int goTo = Model.RankingEnum.Page + 1;
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary">
+                            <a asp-controller="Lists" asp-action="OverallRanking" asp-route-listID=@Model.List.ListID asp-route-page=@goTo>
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </button>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary" disabled>
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

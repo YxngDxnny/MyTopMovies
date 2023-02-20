@@ -1,0 +1,123 @@
+﻿@using MyTopMovies.Controllers;
+@model SelectionController.SelectionChoicesEnum
+@{
+    ViewData["Title"] = "My Selection For " +@Model.Selection.ListName;
+}
+
+<add namespace="System.Web.Mvc.Html" />
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class=" col-6">
+            <h2 class=" text-primary">
+                My Selection For  "@Model.Selection.ListName"
+            </h2>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class=" text-end">
+        <a asp-controller="Selection" asp-action="Clear" asp-route-selectionID="@Model.Selection.SelectionID" class="btn btn-secondary">
+            <i class="bi bi-plus-circle"></i> &nbsp; Clear Selection
+        </a>
+        <a asp-controller="Selection" asp-action="Delete" asp-route-selectionID="@Model.Selection.SelectionID" asp-route-returnPoint="Lists.Index" class="btn btn-danger">
+        <i class="bi bi-trash"></i> Delete Selection
+        </a>
+</div>
+<div class="row pt-4">
+    <div class=" col-6">
+        <p class=" text-danger">
+            @ViewData["SelectionStatus"]
+        </p>
+    </div>
+    <div class=" col-6 text-end">
+        <a asp-controller="Lists" asp-action="OverallRanking" asp-route-listID="@Model.Selection.ListID" asp-route-selectionID="@Model.Selection.SelectionID">
+            <h4 class="text-primary">
+                View Overall Selection>>
+            </h4>
+        </a>
+        
+    </div>
+</div>
+
+<!--Render Enumeration of Selection Choices-->
+@{
+    Html.RenderPartialAsync("_SelectionChoices", Model);
+}
+
+<a asp-controller="Selection" asp-action="StackToTop" asp-route-selectionID=@Model.Selection.SelectionID asp-route-listID=@Model.Selection.ListID class="btn btn-primary mx-2">
+    Stack to Top
+</a>
+<a asp-controller="Selection" asp-action="StackToBottom" asp-route-selectionID=@Model.Selection.SelectionID asp-route-listID=@Model.Selection.ListID class ="btn btn-primary mx-2">
+    Stack to Bottom
+</a>
+
+<!--Page Navigation-->
+@if (Model.Selection.Count > Display.FullItemCount)
+{
+    <div class="row w-100 px-5 gap-2">
+        <div class="col-2 d-flex aligns-items-center mx-3">
+            <div class="h-50 align-self-center">
+                @{
+
+                    int totalpages = (int)(Model.Selection.Count / Display.FullItemCount) + 1;
+                }
+                <p>
+                    Page @Model.Page of @totalpages
+                </p>
+            </div>
+        </div>
+
+        <div class="col-2  mx-3">
+            <div class="row btn-group-sm justify-content-evenly w-100" role="group">
+                @if (Model.Page > 1)
+                {
+                    int goTo = Model.Page - 1;
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary">
+                            <a asp-controller="Selection" asp-action="Index" asp-route-listID=@Model.Selection.ListID asp-route-page=@goTo>
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </button>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary" disabled>
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                    </div>
+
+                }
+                <div class="col-1 d-flex aligns-items-center justify-content-evenly">
+                    <div class="h-50 align-self-center">
+                        @Model.Page
+                    </div>
+                </div>
+                @if ((Model.Selection.Count > Display.FullItemCount)
+               && (Model.Selection.Count > (Model.Page * Display.FullItemCount)))
+                {
+                    int goTo = Model.Page + 1;
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary">
+                            <a asp-controller="Selection" asp-action="Index" asp-route-listID=@Model.Selection.ListID asp-route-page=@goTo>
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </button>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary" disabled>
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

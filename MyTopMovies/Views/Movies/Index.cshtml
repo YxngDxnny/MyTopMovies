@@ -1,0 +1,59 @@
+﻿@using MyTopMovies.Controllers;
+@model Movie
+@{
+    ViewData["Title"] = Model.title;
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class=" col-6">
+            <h2 class=" text-primary">
+                @Model.title
+            </h2>
+        </div>
+    </div>
+    <div class="row pt-4">
+        <div class=" col-4">
+            <img src=@Model.poster_path width="350px" class="box-shadow" />
+        </div>
+        <div class=" col-8">
+            <p style="font-size: 25px">
+                Name: @Model.title
+            </p> 
+            <p style="font-size: 25px">
+                Release Date: @Model.release_date
+            </p> 
+            <p style="font-size: 25px">
+                Genre(s):
+                @{
+                    int i = 0, count = Model.genres.Count();
+                    foreach (var g in Model.genres)
+                    {
+                        @g.name
+                        i++;
+                        if (i < count)
+                        {
+                            <span>,&nbsp;</span>
+                        }
+                        else if (i == count)
+                        {
+                            <span> </span>
+                        }
+                    }
+                }
+                
+            </p>
+            <p style="font-size: 25px">
+                Original Language: @Model.original_language
+            </p> 
+            <p style="font-size: 25px">
+                Overview:
+                <p style="font-size: 18px; font-family: Bahnschrift;">
+                    @Model.overview
+                </p>
+            </p>
+            
+            
+        </div>
+    </div>
+</div>

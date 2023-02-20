@@ -1,0 +1,198 @@
+﻿@using MyTopMovies.Controllers;
+@model SelectionController.SelectionChoicesEnum
+
+<table class="table table-bordered table-striped" width="100%">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+
+            int displayLimit, objectCount = 0, rankCount = 1, displayStart = 0;
+
+            if (Model.DisplayComplete)
+            {
+                displayLimit = Display.FullItemCount * Model.Page;
+                displayStart = (Model.Page - 1) * Display.FullItemCount;
+            }
+            else
+                displayLimit = Display.PreviewItemCount;
+
+            if (Model.Models.Count()== 0)
+            {
+                while(rankCount<= Model.Selection.Count)
+                {
+                    if (objectCount < displayStart)
+                    {
+                        objectCount++;
+                        rankCount++;
+                        continue;
+                    }
+
+                    <tr>
+                        <td width="10%">
+                            @rankCount
+                        </td>
+                        <td width="60%">
+                            -
+                        </td>
+                        <td width="30%">
+                            <div class="w-50 btn-group" role="group">
+                                <a asp-controller="Movies" asp-action="Search" asp-route-selectionID=@Model.Selection.SelectionID asp-route-rank=@rankCount asp-route-returnPoint=@Model.ReturnPoint asp-route-page=@Model.Page class="btn btn-primary mx-2">
+                                    <i class="bi bi-plus-circle"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    objectCount++;
+                    rankCount++;
+                    if (objectCount >= displayLimit) break;
+                }
+            }
+            else
+            {
+                foreach (var obj in Model.Models)
+                {
+                    if (objectCount < displayStart)
+                    {
+                        objectCount++;
+                        rankCount++;
+                        continue;
+                    }
+
+                    while (rankCount != obj.Choice.Rank)
+                    {
+                        <tr>
+                            <td width="10%">
+                                @rankCount
+                            </td>
+                            <td width="60%">
+                                -
+                            </td>
+                            <td width="30%">
+                                @if(Model.IsUser)
+                                {
+                                    <div class="w-50 btn-group" role="group">
+                                        <a asp-controller="Movies" asp-action="Search" asp-route-selectionID=@Model.Selection.SelectionID asp-route-rank=@rankCount asp-route-returnPoint=@Model.ReturnPoint asp-route-page=@Model.Page class="btn btn-primary mx-2">
+                                            <i class="bi bi-plus-circle"></i>
+                                        </a>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+
+                        objectCount++;
+                        rankCount++;
+                        if (objectCount >= displayLimit) break;
+                    }
+
+                    if (objectCount >= displayLimit) break;
+
+                    <tr>
+                        <td width="10%">
+                            @obj.Choice.Rank
+                        </td>
+                        <td width="50%">
+                            <a asp-controller="Movies" asp-action="Index" asp-route-movieID=@obj.Choice.MovieID>
+                                @obj.Choice.MovieName (@obj.Choice.Year)
+                            </a>
+                        </td>
+                        
+                        <td class="text-center" width="30%">
+
+                            <div class="w-75 btn-group text-center row justify-content-between" role="group">
+
+                        @if(Model.IsUser)
+                        {
+                            <div class="col-2 ">
+                                        <a asp-controller="Movies" asp-action="Search" asp-route-selectionID=@Model.Selection.SelectionID asp-route-rank=@rankCount asp-route-returnPoint=@Model.ReturnPoint asp-route-page =@Model.Page class="btn btn-primary mx-2" title="Change">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </div>
+                                <div class="col-2">
+                                    <a asp-controller="Choice" asp-action="Delete" asp-route-choiceID=@obj.Choice.ChoiceID asp-route-listID=@Model.Selection.ListID asp-route-selectionID=@Model.Selection.SelectionID asp-route-returnPoint=@Model.ReturnPoint asp-route-page=@Model.Page class="btn btn-danger mx-2" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                                <div class="col-2">
+                                    <a asp-controller="Selection" asp-action="EditRank" asp-route-choiceID=@obj.Choice.ChoiceID asp-route-listID=@Model.Selection.ListID asp-route-selectionID=@Model.Selection.SelectionID asp-route-direction="-1" class="btn btn-secondary mx-2" title="Up">
+                                        <i class="bi bi-chevron-up"></i>
+                                    </a>
+                                </div>
+                                <div class="col-2">
+                                    <a asp-controller="Selection" asp-action="EditRank" asp-route-choiceID=@obj.Choice.ChoiceID asp-route-listID=@Model.Selection.ListID asp-route-selectionID=@Model.Selection.SelectionID asp-route-direction="+1" class="btn btn-secondary mx-2" title="Down">
+                                        <i class="bi bi-chevron-down"></i>
+                                    </a>
+                                </div>
+                        }
+                            
+
+                                <div class="col-2">
+                                        @if (obj.IsFavourite)
+                                        {
+                                        <a asp-controller="Favourites" asp-action="ToggleFavouriteMovie" asp-route-movieID=@obj.Choice.MovieID asp-route-movieName=@obj.Choice.MovieName asp-route-releaseDate=@obj.Choice.ReleaseDate asp-route-selectionID=@Model.Selection.SelectionID asp-route-returnPoint=@Model.ReturnPoint asp-route-page=@Model.Page class="btn btn-secondary mx-2" title="Unfavourite">
+                                            <i class="bi bi-star-fill"></i>
+                                        </a>
+                                        }
+                                        else
+                                        {
+                                        <a asp-controller="Favourites" asp-action="ToggleFavouriteMovie" asp-route-movieID=@obj.Choice.MovieID asp-route-movieName=@obj.Choice.MovieName asp-route-releaseDate=@obj.Choice.ReleaseDate asp-route-selectionID=@Model.Selection.SelectionID asp-route-returnPoint=@Model.ReturnPoint asp-route-page=@Model.Page class="btn btn-secondary mx-2" title="Favourite">
+                                            <i class="bi bi-star"></i>
+                                        </a>
+                                        }
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    objectCount++;
+                    rankCount++;
+                    if (objectCount >= displayLimit) break;
+                }
+
+                while (rankCount <= Model.Selection.Count)
+                {
+                    if (objectCount >= displayLimit) break;
+
+                    if (objectCount < displayStart)
+                    {
+                        objectCount++;
+                        rankCount++;
+                        continue;
+                    }
+
+                    <tr>
+                        <td width="10%">
+                            @rankCount
+                        </td>
+                        <td width="60%">
+                            -
+                        </td>
+                        <td width="30%">
+                            <div class="w-50 btn-group" role="group">
+                                @if (Model.IsUser)
+                                {
+                                    <div class="w-50 btn-group" role="group">
+                                        <a asp-controller="Movies" asp-action="Search" asp-route-selectionID=@Model.Selection.SelectionID asp-route-rank=@rankCount class="btn btn-primary mx-2">
+                                            <i class="bi bi-plus-circle"></i>
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+
+                    objectCount++;
+                    rankCount++;
+                    if (objectCount >= displayLimit) break;
+
+                }
+            }
+            
+        }
+    </tbody>
+</table>

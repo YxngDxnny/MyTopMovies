@@ -1,0 +1,90 @@
+﻿@using MyTopMovies.Controllers;
+@model UserProfileController.UserSelectionEnum
+@{
+    ViewData["Title"] = Model.Profile.UserFullName +"'s Selections";
+}
+
+<add namespace="System.Web.Mvc.Html" />
+<br />
+<div class=" col-6">
+    <h3 class=" text-primary">
+        All Selections made by @Model.Profile.UserFullName "Page @Model.Page"
+    </h3>
+</div>
+<br />
+
+<!--Render Enumeration of Selections-->
+@{
+    Html.RenderPartialAsync("_UserSelections", Model);
+}
+
+<!--Page Navigation-->
+@if (Model.Models.Count() > Display.FullItemCount)
+{
+    <div class="row w-100 px-5 gap-2">
+        <div class="col-2 d-flex aligns-items-center mx-3">
+            <div class="h-50 align-self-center">
+                @{
+                    int totalpages = (int)(Model.Models.Count / Display.FullItemCount);
+                }
+                <p>
+                    Page @Model.Page of @totalpages
+                </p>
+            </div>
+        </div>
+
+        <div class="col-2  mx-3">
+            <div class="row btn-group-sm justify-content-evenly w-100" role="group" >
+                @if (Model.Page > 1)
+                {
+                    int goTo = Model.Page - 1;
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary">
+                            <a asp-controller="UserProfile" asp-action="UserSelections" asp-route-profileUserID=@Model.Profile.UserID asp-route-page=@goTo>
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </button>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary" disabled>
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                    </div>
+                }
+
+                <div class="col-1 d-flex aligns-items-center justify-content-evenly">
+                    <div class="h-50 align-self-center">
+                        @Model.Page
+                    </div>
+                </div>
+
+                @if ((Model.Models.Count() > Display.FullItemCount)
+               && (Model.Models.Count() > (Model.Page * Display.FullItemCount)))
+                {
+                    int goTo = Model.Page + 1;
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary">
+                            <a asp-controller="UserProfile" asp-action="UserSelections" asp-route-profileUserID=@Model.Profile.UserID asp-route-page=@goTo>
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary" disabled>
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+
+                }
+            </div>
+        </div>     
+    </div>
+
+}

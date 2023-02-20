@@ -1,0 +1,76 @@
+﻿@using MyTopMovies.Controllers;
+@model UserProfileController.UserIndexModel
+@{
+    ViewData["Title"] = Model.Profile.UserFullName;
+}
+
+<add namespace="System.Web.Mvc.Html" />
+
+<div class="container p-3">
+    <div class="row pt-4">
+            <div class=" col-1">
+                @if (Model.Profile.Picture != null)
+                {
+                    <img id="imgPicture" class="profile-picture" style="width:100px;height:100px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(Model.Profile.Picture))">
+                }
+                else
+                {
+                <img id="imgPicture" class="profile-picture" style="width:100px;height:100px; object-fit:cover" src="~/Images/DefaultProfile.png">
+                }
+            </div>
+        <div class=" col-4 pt-4">
+                <h2 class=" text-primary">
+                    @Model.Profile.UserFullName
+                </h2>
+            </div>
+    </div>
+</div>
+<br />
+<br />
+<div class=" col-6">
+    <h3 class=" text-primary">
+        Created Lists
+    </h3>
+</div>
+
+<!--Render Enumeration of Lists-->
+@{
+    Html.RenderPartialAsync("_DisplayLists", Model.ListEnum);
+}
+
+<!--Expand enumeration-->
+@if(Model.ListEnum.Models.Count()>Display.PreviewItemCount)
+{
+    <div class=" col-6 text-end">
+        <h4 class=" text-secondary">
+            <a asp-controller="UserProfile" asp-action="UserLists" asp-route-profileUserID=@Model.Profile.UserID>
+                View More>>
+            </a>
+        </h4>
+    </div>
+}
+<br/>
+<br />
+
+<div class=" col-6">
+    <h3 class=" text-primary">
+        Selections
+    </h3>
+</div>
+
+<!--Render Enumeration of Selections-->
+@{
+    Html.RenderPartialAsync("_UserSelections", Model.SelectionEnum);
+}
+
+<!--Expand enumeration-->
+@if (Model.SelectionEnum.Models.Count() > Display.PreviewItemCount)
+{
+<div class=" col-6 text-end">
+    <h4 class=" text-secondary">
+            <a asp-controller="UserProfile" asp-action="UserSelections" asp-route-profileUserID=@Model.Profile.UserID>
+        View More>>
+        </a>
+    </h4>
+</div>
+}

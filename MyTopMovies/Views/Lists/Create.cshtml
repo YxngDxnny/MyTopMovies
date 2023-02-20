@@ -1,0 +1,101 @@
+﻿@model TopMovieList
+@{
+    ViewData["Title"] = "Create List";
+}
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">
+                Create New List
+            </h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="ListName"></label>
+            <input asp-for="ListName" class="form-control" />
+            <span asp-validation-for="ListName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Count"></label>
+            <input asp-for="Count" class="form-control" />
+            <span asp-validation-for="Count" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="GenreID"></label>
+            <select asp-for="GenreID" class="form-control" size="1">
+                <option value=@null>None</option>
+                <option value="28">Action</option>
+                <option value="12">Adventure</option>
+                <option value="16">Animation</option>
+                <option value="35">Comedy</option>
+                <option value="80">Crime</option>
+                <option value="99">Documentary</option>
+                <option value="18">Drama</option>
+                <option value="10751">Family</option>
+                <option value="14">Fantasy</option>
+                <option value="36">History</option>
+                <option value="27">Horror</option>
+                <option value="10402">Music</option>
+                <option value="9648">Mystery</option>
+                <option value="10749">Romance</option>
+                <option value="878">Science Fiction</option>
+                <option value="10770">TV Movie</option>
+                <option value="53">Thriller</option>
+                <option value="10752">War</option>
+                <option value="37">Western</option>
+            </select>
+            <span asp-validation-for="GenreID" class="text-danger"></span>
+        </div>
+        <div class="row pt-4">
+            <div class=" col-6 mb-3">
+                <label asp-for="YearFilter1"></label>
+                <input asp-for="YearFilter1" class="form-control" list="yearFilter1" />
+                <datalist id="yearFilter1">
+                    @{
+                        <option value=@null />
+                        for (int i = 2023; i >= 1900; i--)
+                        {
+                            <option value=@i />
+                        }
+                    }
+                </datalist>
+                <span asp-validation-for="YearFilter1" class="text-danger"></span>
+            </div>
+            <div class=" col-6 mb-3">
+                <label asp-for="YearFilter2"></label>
+                <input asp-for="YearFilter2" class="form-control" list="yearFilter2" />
+                <datalist id="yearFilter2">
+                    @{
+                        <option value=@null />
+                        for (int i = 2023; i >= 1900; i--)
+                        {
+                            <option value=@i />
+                        }
+                    }
+                </datalist>
+                <span asp-validation-for="YearFilter2" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" maxlength="250" rows="5" cols="60" name="description" class="form-control" placeholder="Add a short description about this List...">
+            
+            </textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+        <a asp-controller="Lists" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            Back to List
+        </a>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+
+

@@ -1,0 +1,84 @@
+﻿@using MyTopMovies.Controllers;
+@model FavouritesController.FavMovieEnum;
+
+<table class="table table-bordered table-striped" width="100%">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th> &nbsp; </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Models != null && Model.Models.Count() > 0)
+        {
+            if(Model.Models.Count==0)
+            {
+                <tr>
+                    <td>
+                        No Movie Found
+                    </td>
+                </tr>
+            }
+
+            int displayLimit, i = 0, start = 0;
+
+            if (Model.DisplayComplete)
+            {
+                displayLimit = Display.FullItemCount * Model.Page;
+                start = (Model.Page - 1) * Display.FullItemCount;
+            }
+            else
+                displayLimit = Display.PreviewItemCount;
+
+            foreach (var obj in Model.Models)
+            {
+                if (i < start)
+                {
+                    i++;
+                    continue;
+                }
+
+                <tr>
+                    <td width="50%">
+                        <a asp-controller="Movies" asp-action="Index" asp-route-movieID=@obj.MovieID>
+                            @obj.MovieName (@obj.Year)
+                        </a>
+                        
+                    </td>
+
+                    <td class="text-center" width="30%">
+                        <div class="w-75 btn-group text-center row justify-content-between" role="group">
+
+                            <div class="col-3">
+                                <a asp-controller="Favourites" asp-action="ToggleFavouriteMovie" asp-route-movieID=@obj.MovieID asp-route-movieName=@obj.MovieName asp-route-releaseDate=@obj.ReleaseDate asp-route-returnPoint=@Model.ReturnPoint asp-route-page=@Model.Page class="btn btn-secondary mx-2">
+                                    
+                                    <i class="bi bi-star-fill "></i>
+                                </a>
+                            </div>
+                            <div class="col-3">
+                                @if (Model.AddTo!=null && !Model.AddTo.IsNull)
+                                {
+                                    <a asp-controller="Choice" asp-action="Add" asp-route-movieID=@obj.MovieID asp-route-movieName=@obj.MovieName asp-route-releaseDate=@obj.ReleaseDate asp-route-returnPoint=@Model.ReturnPoint asp-route-page=@Model.Page asp-route-selectionID=@Model.AddTo.SelectionID asp-route-rank=@Model.AddTo.Rank  class="btn btn-primary mx-2">
+                                        <i class="bi bi-plus-circle"></i>
+                                </a>
+                                }
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                i++;
+                if (i >= displayLimit) break;
+            }
+
+        }
+        
+        else
+        {
+            <tr>
+                <td width="80%">No Movies have been added to Favourites</td>
+                <td width="20%">-</td>
+            </tr>
+        }
+    </tbody>
+</table>

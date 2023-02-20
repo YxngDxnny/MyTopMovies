@@ -1,0 +1,75 @@
+﻿@using MyTopMovies.Controllers;
+@model UserProfileController.UserSelectionEnum
+
+
+
+<table class="table table-bordered table-striped" width="100%">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Created by</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int displayLimit, i = 0, start= 0;
+
+            if (Model.DisplayComplete)
+            {
+                displayLimit = Display.FullItemCount * Model.Page;
+                start = (Model.Page - 1) * Display.FullItemCount;
+            }   
+            else
+                displayLimit = Display.PreviewItemCount;
+
+            
+            @foreach (var obj in Model.Models)
+            {
+                if(i<start)
+                {
+                    i++;
+                    continue;
+                }
+                <tr>
+                    <td width="40%">
+                        @obj.Selection.ListName
+                    </td>
+                    <td width="30%">
+                    @if(obj.CreatorName== "(Deleted List)")
+                    {
+                        @obj.CreatorName
+                    }
+                    else
+                    {
+                        <a asp-controller="UserProfile" asp-action="Index" asp-route-profileUserID=@obj.CreatorID>
+                            @obj.CreatorName
+                        </a>
+                    }
+                    </td>
+                    <td>
+                        <div class="w-100 row btn-group text-center" role="group">
+                            <div class="col-8">
+                                <a asp-controller="Selection" asp-action="UserSelection" asp-route-selectionID=@obj.Selection.SelectionID class="btn btn-primary">
+                                    View Selection>>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                @if (Model.IsUser)
+                                {
+                                    <a asp-controller="Selection" asp-action="Delete" asp-route-selectionID=@obj.Selection.SelectionID asp-route-returnPoint=@Model.ReturnPoint asp-route-page=@Model.Page class ="btn btn-danger mx-2" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+                i++;
+                if (i >= displayLimit) break;
+            }
+            
+        }
+        
+    </tbody>
+</table>

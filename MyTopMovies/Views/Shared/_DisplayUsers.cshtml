@@ -1,0 +1,75 @@
+﻿@using MyTopMovies.Controllers;
+@model UserProfileController.UserEnum;
+
+<table class="table table-bordered table-striped" width="100%">
+   <tbody>
+       
+       @if(Model!=null)
+        {
+            if(Model.Models.Count==0 && TempData["searchString"]!=null)
+            {
+                <tr>
+                    <td>
+                        No Users Found
+                    </td>
+                </tr>
+            }
+
+            int displayLimit, i = 0, start = 0;
+
+            if (Model.DisplayComplete)
+            {
+                displayLimit = Display.FullItemCount * Model.Page;
+                start = (Model.Page - 1) * Display.FullItemCount;
+            }
+            else
+                displayLimit = Display.PreviewItemCount;
+
+            foreach (var obj in Model.Models)
+            {
+                if(i<start)
+                {
+                    i++;
+                    continue;
+                }
+                <tr>
+                    <td>
+                        <div class="row">
+                            <div class="col-1">
+                                @if (@obj.Profile.Picture != null)
+                                {
+                                    <img class="align-content-center profile-picture " id="imgPicture" style="width:50px;height:50px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(@obj.Profile.Picture))">
+                                }
+                                else
+                                {
+                                    <img class="align-content-center profile-picture" id="imgPicture" style="width:50px;height:50px; object-fit:cover" src="~/Images/DefaultProfile.png">
+                                }
+                            </div>
+                            <div class="col-2 d-flex" style="font-size: 22px;">
+                                <div class="align-self-center">
+                                    <a asp-controller="UserProfile" asp-action="UserIndex" asp-route-profileUserID=@obj.Profile.UserID>
+                                        @obj.Profile.UserFullName
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    @if (obj.SelectionID != null)
+                    {
+                        <td>
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-controller="Selection" asp-action="SelectionIndex" asp-route-selectionID=@obj.SelectionID class="btn btn-primary">
+                                    View Selection
+                                </a>
+                            </div>
+                        </td>
+                    }
+                </tr>
+
+                i++;
+                if (i >= displayLimit) break;
+            }
+        }
+       
+   </tbody>
+</table>

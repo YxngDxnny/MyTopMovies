@@ -1,0 +1,101 @@
+﻿@using MyTopMovies.Models;
+@using MyTopMovies.Controllers;
+@model ListsController.ListsEnum;
+@{
+    ViewData["Title"] = "Favourite Movies";
+}
+
+<add namespace="System.Web.Mvc.Html" />
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class=" col-6">
+            <h2 class=" text-primary">
+                Favourite Movies
+            </h2>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+
+<div class=" col-6">
+    <h3 class=" text-primary">
+        Favourite Movies
+    </h3>
+</div>
+
+<!--Render enumeration of Movie Lists-->
+@{
+    Html.RenderPartialAsync("_DisplayLists", Model);
+}
+
+<!--Page Navigation-->
+@if (Model.Models.Count() > Display.FullItemCount)
+{
+    <div class="row w-100 px-5 gap-2">
+        <div class="col-2 d-flex aligns-items-center mx-3">
+            <div class="h-50 align-self-center">
+                @{
+                    int totalpages = (int)(Model.Models.Count / Display.FullItemCount);
+                }
+                <p>
+                    Page @Model.Page of @totalpages
+                </p>
+            </div>
+        </div>
+
+        <div class="col-2  mx-3">
+            <div class="row btn-group-sm justify-content-evenly w-100" role="group">
+                @if (Model.Page > 1)
+                {
+                    int goTo = Model.Page - 1;
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary">
+                            <a asp-controller="Favourites" asp-action="Lists" asp-route-page=@goTo>
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </button>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary" disabled>
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                    </div>
+
+                }
+                <div class="col-1 d-flex aligns-items-center justify-content-evenly">
+                    <div class="h-50 align-self-center">
+                        @Model.Page
+                    </div>
+                </div>
+                @if ((Model.Models.Count() > Display.FullItemCount)
+               && (Model.Models.Count() > (Model.Page * Display.FullItemCount)))
+                {
+                    int goTo = Model.Page + 1;
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary">
+                            <a asp-controller="Favourites" asp-action="Lists" asp-route-page=@goTo><i class="bi bi-chevron-right"></i>
+                            </a>
+                        </button>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="col-3 d-flex justify-content-evenly">
+                        <button type="button" class="btn btn-outline-secondary" disabled>
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+}
+

@@ -1,0 +1,64 @@
+﻿@using MyTopMovies.Controllers;
+@model FavouritesController.FavouriteViewModel
+@{
+    ViewData["Title"] = "Favourites";
+}
+
+<add namespace="System.Web.Mvc.Html" />
+<div class=" col-6">
+    <h3 class=" text-primary">
+        Favourite Movies
+    </h3>
+</div>
+<br />
+<a asp-controller="Movies" asp-action="Search">
+    <h5>
+        Search for Movies to Add to Favourites>>>
+    </h5>
+</a>
+<br />
+
+<!--Render List of Favourite movies-->
+@{
+    Html.RenderPartialAsync("_FavouriteMovies", Model.MovieEnum);
+}
+
+<!--Page Navigation-->
+@if (Model.MovieEnum.Models.Count() > Display.PreviewItemCount)
+{
+    <div class=" col-6 text-end">
+        <h4 class=" text-secondary">
+            <a asp-controller="Favourites" asp-action="Movies">
+                View More>>
+            </a>
+        </h4>
+    </div>
+}
+<br />
+<br />
+
+<div class=" col-6">
+    <h3 class=" text-primary">
+        Favourites Lists
+    </h3>
+</div>
+<br />
+<a asp-controller="Lists" asp-action="Index">
+    <h5>
+        Search for Lists to Add to Favourites>>>
+    </h5>
+</a>
+<br />
+@{
+    Html.RenderPartialAsync("_DisplayLists", Model.ListEnum);
+}
+@if (Model.ListEnum.Models.Count() > Display.PreviewItemCount)
+{
+    <div class=" col-6 text-end">
+        <h4 class=" text-secondary">
+            <a asp-controller="Favourites" asp-action="Lists">
+                View More>>
+            </a>
+        </h4>
+    </div>
+}
